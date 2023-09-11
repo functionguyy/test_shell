@@ -19,15 +19,15 @@ int main(void)
 
 	nRead = _getline(&lineptr, &n, STDIN_FILENO);
 	if (nRead == -1)
-		perror("Error reading input ");
+	{
+		perror("Error reading input");
+		return (0);
+	}
 
 	nWrite = write(STDOUT_FILENO, lineptr, nRead);
 
 	if (nWrite == -1 || nWrite < nRead)
 		return (0);
-
-	putchar('\n');
-	printf("%s, read count : %zu\n", lineptr, nRead);
 
 	return (0);
 }
