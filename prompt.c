@@ -1,59 +1,41 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <errno.h>
 
 
 int main(void)
 {
-	ssize_t nRead, nWrite;
-	char buf[1024];
-	int i, new_line_sig;
+	ssize_t n_read, n_write;
+	char *line_ptr;
+	size_t n;
 
 
-	nRead = 0;
-	i = 0;
-	new_line_sig = 0;
+	line_ptr = NULL;
+	n = 0;
+	errno = 0;
 
 
-	printf("$ ");
-	fflush(stdout);
-
-
-	nRead = read(STDIN_FILENO, buf, 1024);
-	if (nRead == -1)
-		perror("Error reading input ");
-
-
-	/**
-	 * when Enter used to signal end of file in input replace the added
-	 * newline character with a null byte
-	 */
-	while (i < nRead)
+	while (1)
 	{
-		/* replace the new line character with a null byte */
-		if (buf[i] == '\n')
+		printf("$ ");
+		fflush(stdout);
+
+		n_read = getline(&line_ptr, &n, stdin);
+		if (n_read == -1 && errno != 0)
+			perror("getline failed");
+
+		/* executes when Ctrl+D is used to signal end-of-file */
+		if (n_read == -1 && errno == 0)
 		{
-			buf[i] = '\0';
-			new_line_sig = 1;
+			putchar('\n');
+			_exit(EXIT_SUCCESS);
 		}
-		i++;
+
+		n_write = write(STDOUT_FILENO, line_ptr, n_read);
 	}
 
-	/* executes when Ctrl+D is used to signal end of file in input */
-	if (new_line_sig == 0 && nRead > 0)
-	{
-		/* null terminate the read input */
-		buf[nRead] = '\0';
-		putchar('\n');
-	}
-
-
-	nWrite = write(STDOUT_FILENO, buf, nRead);
-
-	if (nWrite == -1 || nWrite < nRead)
-		return (0);
-
-	putchar('\n');
+	/*putchar('\n');*/
 
 	return (0);
 }
