@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include "main.h"
 /**
  *
  * main - program that prints all the command line arguments passed to it
@@ -14,10 +12,18 @@ int main(int ac, char **av)
 
 	i = 1;
 
-	while (av[i] != NULL)
+	if (ac > 1)
 	{
-		printf("%s\n", av[i]);
-		i++;
+		/* shell operates in non-interactive mode */
+		while (av[i] != NULL)
+		{
+			printf("%s\n", av[i]);
+			i++;
+		}
+	}
+	else
+	{
+		/* shell start interactive mode */
 	}
 
 	return (0);
