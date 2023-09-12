@@ -1,6 +1,6 @@
 #include "main.h"
 /**
- * 
+ *
  *
  *
  *
@@ -18,6 +18,7 @@ ssize_t _getline(char **lineptr, size_t *n, int fd)
 	supply_count = 0;
 	mem = NULL;
 	i = 0;
+	errno = 0;
 
 	if (*lineptr == NULL || *n == 0)
 	{
@@ -65,6 +66,10 @@ ssize_t _getline(char **lineptr, size_t *n, int fd)
 	}
 
 	if (n_read == 0 && supply_count == 0)
+		return (-1);
+
+	/* read failure */
+	if (n_read == -1 && errno != 0)
 		return (-1);
 
 	return (supply_count);
