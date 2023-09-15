@@ -17,31 +17,30 @@ char *_prompt(void)
 	errno = 0;
 
 
-	while (1)
+	printf("OMSH$ ");
+	fflush(stdout);
+
+	/* build a readline function */
+	n_read = getline(&line_ptr, &n, stdin);
+	if (n_read == -1 && errno != 0)
 	{
-		printf("OMSH$ ");
-		fflush(stdout);
-
-		n_read = getline(&line_ptr, &n, stdin);
-		if (n_read == -1 && errno != 0)
-		{
-			perror("getline failed");
-			break;
-		}
-
-		/* executes when Ctrl+D is used to signal end-of-file */
-		if (n_read == -1 && errno == 0)
-		{
-			break;
-		}
-
-		/* n_write = write(STDOUT_FILENO, line_ptr, n_read); */
-
-		return (line_ptr);
+		perror("getline failed");
+		free(line_ptr);
+		return (NULL);
 	}
 
-	/*putchar('\n');*/
-	free(line_ptr);
+	/* executes when Ctrl+D is used to signal end-of-file */
+	if (n_read == -1 && errno == 0)
+	{
+		free(line_ptr);
+		return (NULL);
+	}
 
-	return (NULL);
+	/* n_write = write(STDOUT_FILENO, line_ptr, n_read); */
+
+
+	/*putchar('\n');*/
+	/*free(line_ptr);*/
+
+	return (line_ptr);
 }
