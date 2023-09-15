@@ -55,7 +55,11 @@ char **splitLine(char *str)
 	if (strchr(fullStr, '\n') != NULL)
 		overwriteNewlineByte(fullStr);
 
-	/* chopOffNewlineCharacter(fullStr);*/
+	/* add function that check if input is an empty string */
+	/* isEmptyString() */
+	/* isEmptyString() return an int -1 for false and 0 for true */
+
+
 	/* tokenize string */
 	token = strtok(fullStr, " ");
 
