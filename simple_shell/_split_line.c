@@ -1,38 +1,28 @@
 #include "main.h"
-
-void chopOfNewlineCharacter(char **str)
+/**
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+void overwriteNewlineByte(char *str)
 {
 	/* declare variables */
-	char *newlineStr;
-	size_t idx, strCount;
+	char *newlineStrPtr;
+	size_t idx;
 
-
-	newlineStr = *str;
+	/* initialize variables */
+	newlineStrPtr = str;
 	idx = 0;
-	strCount = 0;
 
-
-	while (newlineStr[idx] != '\n')
-	{
+	/* get index of new line character */
+	while (newlineStrPtr[idx] != '\n')
 		idx++;
-		strCount++;
-	}
 
-	/* subtract the count for the newline character */
-	strCount -= 1;
-
-	/* allocate new buffer */
-	buf = malloc(sizeof(char) * strCount);
-	if (buf == NULL)
-	{
-		perror("malloc");
-		exit(EXIT_FAILURE);
-	}
-
-	/* copy all characters  except newline character */
-	buf = strncpy(buf, newlineStr, strCount);
-
-
+	/* overwrite the newline character with a null-byte */
+	newlineStrPtr[idx] = '\0';
 }
 /**
  *
@@ -62,7 +52,10 @@ char **splitLine(char *str)
 		return (NULL);
 
 	/*remove new line character from line */
-	chopOffNewlineCharacter(fullStr);
+	if (strchr(fullStr, '\n') != NULL)
+		overwriteNewlineByte(fullStr);
+
+	/* chopOffNewlineCharacter(fullStr);*/
 	/* tokenize string */
 	token = strtok(fullStr, " ");
 
@@ -76,7 +69,9 @@ char **splitLine(char *str)
 		token = strtok(NULL, " ");
 	}
 
+	free(fullStr);
 	/* reverse_list(&head);*/
+	print_list(head);
 
 	numberOfWords = list_len(head);
 
@@ -85,15 +80,16 @@ char **splitLine(char *str)
 	if (ptrArr == NULL)
 		return (NULL);
 
-	while (head != NULL)
+	temp = head;
+	while (temp != NULL)
 	{
-		temp = head;
-		ptrArr[arrIdx++] = temp->str;
-		head = temp->next;
+		/*temp = head;*/
+		ptrArr[arrIdx++] = strdup(temp->str);
+		temp = temp->next;
 	}
 	ptrArr[arrIdx] = NULL;
 
-	printf("ptrArr[0]=%s", ptrArr[0]);
+	printf("ptrArr[0]=%s\n", ptrArr[0]);
 	free_list(head);
 
 	return (ptrArr);
