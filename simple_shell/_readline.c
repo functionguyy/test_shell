@@ -30,6 +30,7 @@ char *_readLine(void)
 		free(line_ptr);
 		return (NULL);
 	}
+	/* add condition to catch Ctrl+C signal */
 
 	/* executes when Ctrl+D is used to signall end-of-file */
 	if (n_read == -1 && errno == 0)
