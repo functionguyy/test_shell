@@ -37,10 +37,13 @@ int main(int ac, char **av)
 		/* Non-interactive mode */
 		/* skip spaces or empty strings*/
 		/* get line */
+		p_return = _readLine();
+		if (p_return == NULL)
+			return (0);
 		/* split line and create array of words */
+		cmdLineArr = splitLine(p_return);
 		/* execute the command */
-		printf("Yes");
-
+		processExecute(cmdLineArr);
 	}
 	else
 	{
@@ -50,7 +53,10 @@ int main(int ac, char **av)
 			/* shell start interactive mode */
 			p_return = _prompt();
 			if (p_return == NULL)
+			{
+				free(p_return);
 				break;
+			}
 			cmdLineArr = splitLine(p_return);
 			if (cmdLineArr == NULL)
 				perror("splitLine");
