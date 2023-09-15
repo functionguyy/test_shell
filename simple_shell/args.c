@@ -15,6 +15,7 @@ int main(int ac, char **av)
 	p_return = NULL;
 
 
+	/* command line arguments */
 	if (ac > 1)
 	{
 		if (ac != 2)
@@ -29,8 +30,21 @@ int main(int ac, char **av)
 			i++;
 		}
 	}
+
+	/* mode switching */
+	if (isatty(STDIN_FILENO) == 0 && errno == ENOTTY)
+	{
+		/* Non-interactive mode */
+		/* skip spaces or empty strings*/
+		/* get line */
+		/* split line and create array of words */
+		/* execute the command */
+		printf("Yes");
+
+	}
 	else
 	{
+		/* interactive mode */
 		while (1)
 		{
 			/* shell start interactive mode */
@@ -44,6 +58,6 @@ int main(int ac, char **av)
 		}
 	}
 
-	putchar('\n');
+	/*putchar('\n');*/
 	return (0);
 }
