@@ -24,4 +24,4 @@ ssize_t isEmptyString(char *str, char *delimiter)
 		return (-1);
 
 	return (0);
-};
+}
