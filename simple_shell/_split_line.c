@@ -58,6 +58,8 @@ char **splitLine(char *str)
 	/* add function that check if input is an empty string */
 	/* isEmptyString() */
 	/* isEmptyString() return an int -1 for false and 0 for true */
+	if (isEmptyString(fullStr, " ") == -1)
+		return (NULL);
 
 
 	/* tokenize string */
