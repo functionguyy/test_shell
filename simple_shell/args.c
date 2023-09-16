@@ -54,7 +54,7 @@ int main(int ac, char **av)
 			p_return = _prompt();
 			if (p_return == NULL)
 				return (0);
-			cmdLineArr = splitLine(p_return);
+			cmdLineArr = parseLine(p_return, " ");
 			if (cmdLineArr == NULL)
 				continue;
 			processExecute(cmdLineArr);
