@@ -48,5 +48,8 @@ size_t print_list(const list_t *h);
 void freeArrayOfPtr(char **arr);
 char *_readLine(void);
 ssize_t isEmptyString(char *str, char *delimiter);
+char **createArrayOfLineTokens(list_t *h);
+list_t *createListOfLineTokens(char *str, char *delim);
+char **parseLine(char *str, char *delimiter);
 
 #endif /* MAIN_H_ */
