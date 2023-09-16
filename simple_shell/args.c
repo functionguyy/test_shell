@@ -53,13 +53,10 @@ int main(int ac, char **av)
 			/* shell start interactive mode */
 			p_return = _prompt();
 			if (p_return == NULL)
-			{
-				free(p_return);
-				break;
-			}
+				return (0);
 			cmdLineArr = splitLine(p_return);
 			if (cmdLineArr == NULL)
-				perror("splitLine");
+				continue;
 			processExecute(cmdLineArr);
 		}
 	}
