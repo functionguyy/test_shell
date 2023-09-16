@@ -25,3 +25,8 @@ ssize_t isEmptyString(char *str, char *delimiter)
 
 	return (0);
 }
+
+
+/* implement function that calls builtin command */
+/* it will have a null terminated array of function pointers */
+
