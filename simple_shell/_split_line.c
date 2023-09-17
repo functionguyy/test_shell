@@ -7,7 +7,7 @@
  *
  *
  */
-void overwriteNewlineByte(char *str)
+void overwriteNewlineByt(char *str)
 {
 	/* declare variables */
 	char *newlineStrPtr;
@@ -53,7 +53,7 @@ char **splitLine(char *str)
 
 	/*remove new line character from line */
 	if (strchr(fullStr, '\n') != NULL)
-		overwriteNewlineByte(fullStr);
+		overwriteNewlineByt(fullStr);
 
 	/* add function that check if input is an empty string */
 	/* isEmptyString() */
