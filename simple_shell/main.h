@@ -23,6 +23,28 @@ typedef struct list_s
 	size_t len;
 	struct list_s *next;
 } list_t;
+/**
+ * struct builtInFuncHandler - data structure for handling calls to builtin functions
+ * @funcName: the name of the function
+ * @builtInFunc: pointer to function that takes no argument and returns an int
+ */
+typedef struct builtInFunc_t
+{
+	char *funcName;
+	int (*builtInFunc)(void);
+} builtInFunc_t;
+/**
+ * struct commandType - data structure for returning command location info
+ * @commandName: the name of the command
+ * @locationFlag: an integer that representing the type of command (builtin or
+ * binary).
+ */
+typedef struct command_t
+{
+	char *command;
+	int locationFlag;
+} command_t;
+
 
 /* macros */
 #define BUFSIZE 1024
@@ -51,5 +73,6 @@ ssize_t isEmptyString(char *str, char *delimiter);
 char **createArrayOfLineTokens(list_t *h);
 list_t *createListOfLineTokens(char *str, char *delim);
 char **parseLine(char *str, char *delimiter);
+commandType *searchCommand(char *commandName);
 
 #endif /* MAIN_H_ */
