@@ -58,6 +58,9 @@ char **parseLine(char *str, char *delimiter)
 	head = createListOfLineTokens(fullStr, delimiter);
 	ptrArr = createArrayOfLineTokens(head);
 
+	/* free input buffer */
+	free(fullStr);
+
 
 	return (ptrArr);
 }
