@@ -29,7 +29,7 @@ int processExecute(char **line_arr)
 	}
 	if (pid > 0)
 	{
-		printf("I'm the parent\n");
+		/* printf("I'm the parent\n");*/
 		freeArrayOfPtr(line_arr);
 		/*_exit(status);*/
 	}
