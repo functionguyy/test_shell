@@ -57,6 +57,10 @@ int main(int ac, char **av)
 			cmdLineArr = parseLine(p_return, " ");
 			if (cmdLineArr == NULL)
 				continue;
+			/* search command */
+				/* if search return NULL */
+				/* print error */
+				/*continue */
 			processExecute(cmdLineArr);
 		}
 	}
