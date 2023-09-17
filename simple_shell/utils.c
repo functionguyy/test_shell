@@ -25,10 +25,36 @@ ssize_t isEmptyString(char *str, char *delimiter)
 
 	return (0);
 }
+/**
+ *
+ *
+ *
+ */
+char *_getenv(char *envVar)
+{
+	char **ep, *varName, *envValue, *line;
+	size_t valueIdx;
+
+	ep = environ;
+	envValue = NULL;
 
 
-/* implement function that calls builtin command */
-/* it will have a null terminated array of function pointers */
+	while (*ep != NULL)
+	{
+		varName = strtok(*ep, "=");
+		if (strcmp(varName, envVar) == 0)
+		{
+			/* enviroment variables are of the nature name=var */
+			valueIdx = strlen(varName) + 1;
+			line = *ep;
+			envValue = (line + valueIdx);
+			break;
+		}
+		ep++;
+	}
+
+	return (envValue);
+}
 /**
  *
  *
