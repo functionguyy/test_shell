@@ -24,26 +24,26 @@ typedef struct list_s
 	struct list_s *next;
 } list_t;
 /**
- * struct builtInFuncHandler - data structure for handling calls to builtin functions
- * @funcName: the name of the function
- * @builtInFunc: pointer to function that takes no argument and returns an int
+ * struct builtInCmd_s - data structure for handling calls to builtin functions
+ * @cmdName: the name of the function
+ * @builtInCmd: pointer to function that takes no argument and returns an int
  */
-typedef struct builtInFunc_t
+typedef struct builtInCmd_s
 {
-	char *funcName;
-	int (*builtInFunc)(void);
-} builtInFunc_t;
+	char *cmdName;
+	int (*builtInCmd)(void);
+} builtInCmd_t;
 /**
- * struct commandType - data structure for returning command location info
- * @commandName: the name of the command
+ * struct command_s - data structure for returning command location info
+ * @cmd: the name of the command
  * @locationFlag: an integer that representing the type of command (builtin or
  * binary).
  */
-typedef struct command_t
+typedef struct cmd_s
 {
-	char *command;
+	char *cmd;
 	int locationFlag;
-} command_t;
+} cmd_t;
 
 
 /* macros */
