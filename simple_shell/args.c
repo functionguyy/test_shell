@@ -10,9 +10,11 @@ int main(int ac, char **av)
 {
 	size_t i;
 	char *p_return, **cmdLineArr;
+	cmd_t *cmdData;
 
 	i = 1;
 	p_return = NULL;
+	cmdData = NULL;
 
 
 	/* command line arguments */
@@ -35,13 +37,13 @@ int main(int ac, char **av)
 	if (isatty(STDIN_FILENO) == 0 && errno == ENOTTY)
 	{
 		/* Non-interactive mode */
-		/* skip spaces or empty strings*/
-		/* get line */
 		p_return = _readLine();
 		if (p_return == NULL)
 			return (0);
 		/* split line and create array of words */
-		cmdLineArr = splitLine(p_return);
+		cmdLineArr = parseLine(p_return, " ");
+		if (cmdLineArr == NULL)
+			return (0);
 		/* execute the command */
 		processExecute(cmdLineArr);
 	}
@@ -58,9 +60,14 @@ int main(int ac, char **av)
 			if (cmdLineArr == NULL)
 				continue;
 			/* search command */
+			cmdData = searchCmd(cmdLineArr[0]);
+			if (cmdData == NULL)
+			{
 				/* if search return NULL */
 				/* print error */
-				/*continue */
+				printf("Error: Not found\n");
+				continue;
+			}
 			processExecute(cmdLineArr);
 		}
 	}
