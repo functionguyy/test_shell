@@ -50,6 +50,7 @@ int main(int ac, char **av)
 	else
 	{
 		/* interactive mode */
+		/* make a function name interactiveLoop */
 		while (1)
 		{
 			/* shell start interactive mode */
