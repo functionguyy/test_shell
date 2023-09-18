@@ -45,7 +45,7 @@ int main(int ac, char **av)
 		if (cmdLineArr == NULL)
 			return (0);
 		/* execute the command */
-		processExecute(cmdLineArr);
+		processExecute(cmdLineArr[0], cmdLineArr);
 	}
 	else
 	{
