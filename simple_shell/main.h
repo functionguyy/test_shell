@@ -9,6 +9,7 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 /**
  * struct list_s - singly linked list
  * @str: string - (malloc'ed string)
@@ -34,7 +35,7 @@ typedef struct builtInCmd_s
 	int (*builtInCmd)(void);
 } builtInCmd_t;
 /**
- * struct command_s - data structure for returning command location info
+ * struct cmd_s - data structure for returning command location info
  * @cmd: the name of the command
  * @locationFlag: an integer that representing the type of command (builtin or
  * binary).
@@ -48,6 +49,7 @@ typedef struct cmd_s
 
 /* macros */
 #define BUFSIZE 1024
+#define ERR404 404 /* not found */
 
 /* global variable */
 extern char **environ;
@@ -73,6 +75,11 @@ ssize_t isEmptyString(char *str, char *delimiter);
 char **createArrayOfLineTokens(list_t *h);
 list_t *createListOfLineTokens(char *str, char *delim);
 char **parseLine(char *str, char *delimiter);
-commandType *searchCommand(char *commandName);
+cmd_t *searchCmd(char *commandName);
+int (*isBuiltInCmd(char *commandName))(void);
+char *searchPath(char *commandName);
+char *locateCmdDirPath(list_t *h, char *cmdName);
+list_t *createPathDirList(void);
+char *_getenv(char *envVar);
 
 #endif /* MAIN_H_ */
