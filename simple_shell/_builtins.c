@@ -18,6 +18,8 @@ int env(void)
 	while (*ep != NULL)
 	{
 
+		/* bring your printf function to use here */
+
 
 	}
 
