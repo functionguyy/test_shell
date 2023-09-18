@@ -61,15 +61,20 @@ int main(int ac, char **av)
 			if (cmdLineArr == NULL)
 				continue;
 			/* search command */
+			printf("%s\n", cmdLineArr[0]);
 			cmdData = searchCmd(cmdLineArr[0]);
 			if (cmdData == NULL)
 			{
 				/* if search return NULL */
 				/* print error */
 				printf("Error: Not found\n");
+				free(cmdData);
+				freeArrayOfPtr(cmdLineArr);
 				continue;
 			}
-			processExecute(cmdLineArr);
+			/* continue; */
+			/*processExecute(cmdLineArr);*/
+			executeFunc(cmdData, cmdLineArr);
 		}
 	}
 
