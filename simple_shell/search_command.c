@@ -6,27 +6,28 @@
  */
 int executeFunc(cmd_t *commandData, char **cmdLineArr)
 {
-	char *currentCmd;
+	char *cmdPath;
 	/*int (*builtIn)(void);*/
 
-	currentCmd = NULL;
+	cmdPath = NULL;
 	/*builtIn = NULL;*/
 	/* if the locationFlag is 2 */
 	if (commandData->locationFlag == 2)
 		/* call processExecute function */
-		processExecute(cmdLineArr);
+		processExecute(cmdLineArr[0], cmdLineArr);
 
 	/* if the locationFlag is 1 */
 	if (commandData->locationFlag == 1)
 	{
 		/* extract the pointer in the first index  of cmdLineArr */
-		currentCmd = cmdLineArr[0];
+		/*currentCmd = cmdLineArr[0];*/
 		/* free the extracted memory space */
-		free(currentCmd);
+		/*free(currentCmd);*/
 		/* now assign the pointer in the struct data to the index cmdLineArr */
-		cmdLineArr[0] = commandData->cmd;
+		cmdPath = commandData->cmd;
 		/* call proceesExecute function */
-		processExecute(cmdLineArr);
+		processExecute(cmdPath, cmdLineArr);
+		free(cmdPath);
 	}
 
 	/* if the locationFlag is 0 */
@@ -96,7 +97,7 @@ cmd_t *searchCmd(char *commandName)
 
 
 	/*check the builtin functions for a command name match */
-	if (isBuiltInCmd(commandName) == NULL)
+	if (isBuiltInCmd(commandName))
 	{
 		/**
 		 * n will be 0 to indicate that the command is a builtin command
