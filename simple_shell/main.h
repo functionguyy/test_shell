@@ -81,5 +81,6 @@ char *searchPath(char *commandName);
 char *locateCmdDirPath(list_t *h, char *cmdName);
 list_t *createPathDirList(void);
 char *_getenv(char *envVar);
+int executeFunc(cmd_t *commandData, char **cmdLineArr);
 
 #endif /* MAIN_H_ */
