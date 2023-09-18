@@ -4,8 +4,8 @@
  *
  *
  */
-int executeFunc(cmd_t commandData, char **cmdLineArr)
-{
+/* int executeFunc(cmd_t *commandData, char **cmdLineArr)*/
+/* { */
 	/* if the locationFlag is 2 */
 		/* call processExecute function */
 
@@ -20,9 +20,9 @@ int executeFunc(cmd_t commandData, char **cmdLineArr)
 		/* free cmdLineArr */
 
 	/* free struct data */
-	free(commandData);
-	return (0);
-}
+	/* free(commandData); */
+	/* return (0);*/
+/* } */
 /**
  *
  *
@@ -39,15 +39,17 @@ cmd_t *searchCmd(char *commandName)
 	/* declare variables */
 	cmd_t *commandData;
 	struct stat st;
+	char *cmdPath;
 
 	/* initialize variables */
-	commandData = malloc_checked(sizeof(cmd_t));
+	commandData = malloc(sizeof(cmd_t));
+	cmdPath = NULL;
 
 
 	 /* return a struct with number and character */
 
 	/* check if commandName contain a forward slash */
-	if (strchr(commandName, "/"))
+	if (strchr(commandName, '/'))
 	{
 		/* do stat check on commandName */
 		if (stat(commandName, &st) == 0)
@@ -59,6 +61,7 @@ cmd_t *searchCmd(char *commandName)
 			 */
 			commandData->cmd = commandName;
 			commandData->locationFlag = 2;
+			return (commandData);
 		}
 		else
 		{
@@ -82,10 +85,11 @@ cmd_t *searchCmd(char *commandName)
 		return (commandData);
 	}
 
-	if ((commandPath = searchPath(char *commandName)) != NULL)
+	/* search for command in PATH */
+	if ((cmdPath = searchPath(commandName)) != NULL)
 	{
 		/* check the path directories for the command */
-		commandData->cmd = commandPath;
+		commandData->cmd = cmdPath;
 		commandData->locationFlag = 1;
 		return (commandData);
 	}
@@ -106,9 +110,9 @@ cmd_t *searchCmd(char *commandName)
  */
 int (*isBuiltInCmd(char *commandName))(void)
 {
-	builtInFunc_t func[] = {
-		{"env", env},
-		{"exit", exit},
+	builtInCmd_t func[] = {
+		{"env", NULL},
+		{"exit", NULL},
 		{NULL, NULL}
 	};
 
@@ -126,10 +130,12 @@ int (*isBuiltInCmd(char *commandName))(void)
 	return (NULL);
 }
 /**
+ * searchPath - searches the directories in the PATH enviroment variables for
+ * the directory containing the binary file associated with a command
+ * commandName: the name of the command whose binary is to be searched for
  *
- *
- *
- *
+ * Return: returns a pointer to the directory containing the binary file or NULL
+ * if the file is not found.
  */
 char *searchPath(char *commandName)
 {
@@ -149,14 +155,78 @@ char *searchPath(char *commandName)
 	cmdDirPath = locateCmdDirPath(head, commandName);
 	if (cmdDirPath == NULL)
 	{
-		free(head);
+		free_list(head);
 		return (NULL);
 	}
 
 	/* free the PATH directory list */
-	free(head);
+	free_list(head);
 
 	return (cmdDirPath);
+}
+/**
+ * locateCmdDirPath - return the directory pathname containing the binary file
+ * of a command.
+ * @h: linked list of the PATH directories
+ * @cmdName: name of the command
+ *
+ * Return: returns the pointer to a directory pathname containing the binary
+ * for a command or NULL if not found.
+ */
+char *locateCmdDirPath(list_t *h, char *cmdName)
+{
+	/* declare variables */
+	list_t *temp;
+	size_t tempBufSize, bufSize, foundSig, lenCmdName;
+	char *cmdDirPath, *pathnameMem;
+	struct stat st;
+	char *slash;
+
+	/* initialize variables */
+	lenCmdName = strlen(cmdName);
+	bufSize = 512;
+	cmdDirPath = NULL;
+	foundSig = 0;
+	slash = "/";
+	temp = h;
+
+	pathnameMem = malloc(sizeof(char) * bufSize);
+
+	while (temp != NULL && foundSig == 0)
+	{
+		tempBufSize = temp->len + lenCmdName + 2;
+		if (tempBufSize > bufSize)
+		{
+			bufSize = tempBufSize;
+			pathnameMem = realloc(pathnameMem, sizeof(char) * bufSize);
+		}
+
+		cmdDirPath = strcpy(pathnameMem, temp->str);
+		if (cmdDirPath[(temp->len) - 1] != '/')
+			cmdDirPath = strcat(pathnameMem, slash);
+		cmdDirPath = strcat(pathnameMem, cmdName);
+		/* printf("%s\n", cmdDirPath); */
+
+		/**
+		 * check if command file exist in PATH directory pointed to by dirPath
+		 */
+		if (stat(cmdDirPath, &st) == 0)
+		{
+			foundSig = 1;
+			bufSize = strlen(cmdDirPath);
+			pathnameMem = malloc(sizeof(char) * (bufSize + 1));
+			pathnameMem = strcpy(pathnameMem, cmdDirPath);
+			free(cmdDirPath);
+			cmdDirPath = pathnameMem;
+			return (cmdDirPath);
+		}
+		temp = temp->next;
+	}
+
+	if (cmdDirPath != NULL && foundSig == 0)
+		free(cmdDirPath);
+
+	return (NULL);
 }
 /**
  *
@@ -165,55 +235,25 @@ char *searchPath(char *commandName)
  *
  *
  */
-char *locateCmdDirPath(list_t *h, char *cmdName)
+list_t *createPathDirList(void)
 {
 	/* declare variables */
-	list_t *temp;
-	size_t tempBufSize, bufSize, foundSig;
-	char *cmdDirPath, *pathnameMem;
-	struct stat st;
+	char *pathDirToken, *envValue;
+	list_t *head;
 
 	/* initialize variables */
-	lenCmdName = strlen(commandName);
-	bufSize = 0;
-	cmdDirPath = NULL;
-	foundSig = 0;
-	temp = h;
+	head = NULL;
+	envValue = _getenv("PATH");
+	pathDirToken = strtok(envValue, ":");
 
-	while (temp != NULL && foundSig == 0)
+
+
+	/* build singly linked list of PATH directory pathnames */
+	while (pathDirToken != NULL)
 	{
-		tempBufSize = temp->n + lenCmdName + 1;
-		if (bufsize == 0)
-		{
-			bufSize = tempBufSize;
-			pathnameMem = malloc_checked(bufSize);
-		}
-
-		if (tempBufSize > bufSize)
-		{
-			bufsize = tempBufSize;
-			pathnameMem = realloc(pathnameMem, sizeof(char) * bufSize);
-		}
-
-		cmdDirPath = strcpy(pathnameMem, temp->str);
-		cmdDirPath = strcat(pathnameMem, commandName);
-
-		/**
-		 * check if command file exist in PATH directory pointed to by dirPath
-		 */
-		if (stat(cmdDirPath, &st) == 0)
-		{
-			foundSig = 1;
-			return (cmdDirPath);
-		}
-		temp = temp->next;
+		add_node_end(&head, pathDirToken);
+		pathDirToken = strtok(NULL, ":");
 	}
 
-	if (cmdDirPath != NULL && foundSig == 0)
-	{
-		free(cmdDirPath);
-	}
-
-	return (NULL);
+	return (head);
 }
-
