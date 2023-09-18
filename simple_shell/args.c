@@ -45,7 +45,14 @@ int main(int ac, char **av)
 		if (cmdLineArr == NULL)
 			return (0);
 		/* execute the command */
-		processExecute(cmdLineArr[0], cmdLineArr);
+		cmdData = searchCmd(cmdLineArr[0]);
+		if (cmdData == NULL)
+		{
+			free(cmdData);
+			freeArrayOfPtr(cmdLineArr);
+			return (0);
+		}
+		executeFunc(cmdData, cmdLineArr);
 	}
 	else
 	{
@@ -56,7 +63,8 @@ int main(int ac, char **av)
 			/* shell start interactive mode */
 			p_return = _prompt();
 			if (p_return == NULL)
-				return (0);
+				break;
+			/*return (0);*/
 			cmdLineArr = parseLine(p_return, " ");
 			if (cmdLineArr == NULL)
 				continue;
@@ -67,7 +75,7 @@ int main(int ac, char **av)
 			{
 				/* if search return NULL */
 				/* print error */
-				printf("Error: Not found\n");
+				perror("Error: Not found");
 				free(cmdData);
 				freeArrayOfPtr(cmdLineArr);
 				continue;
@@ -76,8 +84,8 @@ int main(int ac, char **av)
 			/*processExecute(cmdLineArr);*/
 			executeFunc(cmdData, cmdLineArr);
 		}
+		putchar('\n');
 	}
 
-	/*putchar('\n');*/
 	return (0);
 }
