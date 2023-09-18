@@ -42,7 +42,7 @@ cmd_t *searchCmd(char *commandName)
 	char *cmdPath;
 
 	/* initialize variables */
-	commandData = malloc(sizeof(cmd_t));
+	commandData = malloc_checked(sizeof(cmd_t));
 	cmdPath = NULL;
 
 
@@ -190,7 +190,7 @@ char *locateCmdDirPath(list_t *h, char *cmdName)
 	slash = "/";
 	temp = h;
 
-	pathnameMem = malloc(sizeof(char) * bufSize);
+	pathnameMem = malloc_checked(sizeof(char) * bufSize);
 
 	while (temp != NULL && foundSig == 0)
 	{
@@ -214,7 +214,7 @@ char *locateCmdDirPath(list_t *h, char *cmdName)
 		{
 			foundSig = 1;
 			bufSize = strlen(cmdDirPath);
-			pathnameMem = malloc(sizeof(char) * (bufSize + 1));
+			pathnameMem = malloc_checked(sizeof(char) * (bufSize + 1));
 			pathnameMem = strcpy(pathnameMem, cmdDirPath);
 			free(cmdDirPath);
 			cmdDirPath = pathnameMem;
