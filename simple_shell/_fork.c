@@ -1,6 +1,6 @@
 #include "main.h"
 
-int processExecute(char **line_arr)
+int processExecute(char *cmdPath, char **line_arr)
 {
 	pid_t pid;
 	int status;
@@ -35,7 +35,7 @@ int processExecute(char **line_arr)
 	}
 	if (pid == 0)
 	{
-		if (execve(line_arr[0], line_arr, environ) == -1)
+		if (execve(cmdPath, line_arr, environ) == -1)
 			perror("execve");
 		_exit(status);
 
