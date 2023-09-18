@@ -1,5 +1,29 @@
 #include "main.h"
 /**
+ * malloc_checked - function that allocates memory using malloc
+ * @b: size of the memory bytes to be allocated
+ *
+ * Return: pointer to the allocated memory
+ */
+void *malloc_checked(unsigned int b)
+{
+	/* declare variable */
+	void *memory;
+
+	/* initialize variable */
+	memory = NULL;
+
+	/* request memory allocation */
+	memory = malloc(b);
+
+	/* confirm memory allocation */
+	if (memory == NULL)
+		exit(98);
+
+	/* return pointer to allocated memory */
+	return (memory);
+}
+/**
  *
  *
  *
@@ -77,9 +101,7 @@ char **createArrayOfLineTokens(list_t *h)
 	arrIdx = 0;
 	arraySize = list_len(h) + 1;
 
-	ptrArr = malloc(sizeof(char *) * arraySize);
-	if (ptrArr == NULL)
-		return (NULL);
+	ptrArr = malloc_checked(sizeof(char *) * arraySize);
 
 	while (temp != NULL)
 	{
