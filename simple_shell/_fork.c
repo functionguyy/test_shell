@@ -37,7 +37,7 @@ int processExecute(char *cmdPath, char **line_arr)
 	{
 		if (execve(cmdPath, line_arr, environ) == -1)
 			perror("execve");
-		_exit(status);
+		/*_exit(status);*/
 
 	}
 	/*printf("I'm child!\n");*/
