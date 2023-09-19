@@ -23,7 +23,7 @@ char *createDirPath(list_t *h, char **mem, char *cmdName, size_t size)
 	temp = h;
 	slash = "/";
 
-	tempBufSize = temp->len + lenCmdName + 2;
+	tempBufSize = temp->len + lenCmdName + 1;
 	if (tempBufSize > size)
 	{
 		size = tempBufSize;
@@ -40,7 +40,36 @@ char *createDirPath(list_t *h, char **mem, char *cmdName, size_t size)
 	return (cmdDirPath);
 }
 /**
- * locateCmdDirPath - return the directory pathname containing the binary file
+ * alignMemoryAllocation - removes the unused memory spaces still available in
+ * a malloc'ed buffer
+ * @src: pointer to the malloc'ed buffer
+ *
+ * Description: alignMemoryAllocation allocates buffer with just the amount
+ * of bytes needed to store the string(including the null-byte) that is in
+ * src, copies the string from src into the new buffer and frees src
+ * Return: returns a pointer to new buffer
+ */
+char *alignMemoryAllocation(char *src)
+{
+	/* declare variables */
+	size_t bufSize;
+	char *newBuf;
+
+	/* initialize variables */
+	bufSize = strlen(src) + 1;
+	newBuf = malloc(sizeof(char) * bufSize);
+
+
+	if (newBuf == NULL)
+		return (NULL);
+
+	newBuf = strcpy(newBuf, src);
+	free(src);
+
+	return (newBuf);
+}
+/**
+ * locateCmdDirPath - returns pathname for the binary file of a command
  * of a command.
  * @h: linked list of the PATH directories
  * @cmdName: name of the command
@@ -53,46 +82,39 @@ char *locateCmdDirPath(list_t *h, char *cmdName)
 	/* declare variables */
 	list_t *temp;
 	size_t bufSize, foundSig;
-	char *cmdDirPath, *pathnameMem;
+	char *cmdFilePath, *buffer, *filePath;
 	struct stat st;
 
 	/* initialize variables */
 	bufSize = 512;
-	cmdDirPath = NULL;
+	cmdFilePath = NULL;
+	filePath = NULL;
+	buffer = NULL;
 	foundSig = 0;
 	temp = h;
 
-	pathnameMem = malloc(sizeof(char) * bufSize);
-	if (pathnameMem == NULL)
+	buffer = malloc(sizeof(char) * bufSize);
+	if (buffer == NULL)
 		return (NULL);
 
 	while (temp != NULL && foundSig == 0)
 	{
-		cmdDirPath = createDirPath(temp, &pathnameMem, cmdName, bufSize);
-		if (cmdDirPath == NULL)
+		filePath = createDirPath(temp, &buffer, cmdName, bufSize);
+		if (filePath == NULL)
 			return (NULL);
 
-		/**
-		 * check if command file exist in PATH directory pointed to by dirPath
-		 */
-		if (stat(cmdDirPath, &st) == 0)
+		 /* check if command file exist in the directory pointed to by filePath */
+		if (stat(filePath, &st) == 0)
 		{
 			foundSig = 1;
-			bufSize = strlen(cmdDirPath);
-			pathnameMem = malloc(sizeof(char) * (bufSize + 1));
-			if (pathnameMem == NULL)
-				return (NULL);
-
-			pathnameMem = strcpy(pathnameMem, cmdDirPath);
-			free(cmdDirPath);
-			cmdDirPath = pathnameMem;
-			return (cmdDirPath);
+			cmdFilePath = alignMemoryAllocation(filePath);
+			return (cmdFilePath);
 		}
 		temp = temp->next;
 	}
 
-	if (cmdDirPath != NULL && foundSig == 0)
-		free(cmdDirPath);
+	if (filePath != NULL && foundSig == 0)
+		free(filePath);
 
 	return (NULL);
 }
