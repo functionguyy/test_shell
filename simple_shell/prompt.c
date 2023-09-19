@@ -44,7 +44,7 @@ int runNonInteractive(void)
 		freeArrayOfPtr(cmdLineArr);
 		return (0);
 	}
-	executeFunc(cmdData, cmdLineArr);
+	executeCmd(cmdData, cmdLineArr);
 
 	return (0);
 }
@@ -81,7 +81,7 @@ int runInteractive(void)
 			continue;
 		}
 
-		executeFunc(cmdData, cmdLineArr);
+		executeCmd(cmdData, cmdLineArr);
 	}
 	return (0);
 }
