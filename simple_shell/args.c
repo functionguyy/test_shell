@@ -9,12 +9,12 @@
 int main(int ac, char **av)
 {
 	size_t i;
-	char *p_return, **cmdLineArr;
-	cmd_t *cmdData;
+	/*char *p_return, **cmdLineArr;
+	cmd_t *cmdData;*/
 
 	i = 1;
-	p_return = NULL;
-	cmdData = NULL;
+	/*p_return = NULL;
+	cmdData = NULL;*/
 
 
 	/* command line arguments */
@@ -37,53 +37,56 @@ int main(int ac, char **av)
 	if (isatty(STDIN_FILENO) == 0 && errno == ENOTTY)
 	{
 		/* Non-interactive mode */
-		p_return = _readLine();
-		if (p_return == NULL)
-			return (0);
+
+
+		runNonInteractive();
+		/*p_return = _readLine();*/
+		/*if (p_return == NULL)*/
+			/*return (0);*/
 		/* split line and create array of words */
-		cmdLineArr = parseLine(p_return, " ");
+		/*cmdLineArr = parseLine(p_return, " ");
 		if (cmdLineArr == NULL)
-			return (0);
+			return (0);*/
 		/* execute the command */
-		cmdData = searchCmd(cmdLineArr[0]);
-		if (cmdData == NULL)
+		/*cmdData = searchCmd(cmdLineArr[0]);*/
+		/*if (cmdData == NULL)
 		{
 			free(cmdData);
 			freeArrayOfPtr(cmdLineArr);
 			return (0);
 		}
-		executeFunc(cmdData, cmdLineArr);
+		executeFunc(cmdData, cmdLineArr);*/
 	}
 	else
 	{
 		/* interactive mode */
 		/* make a function name interactiveLoop */
-		while (1)
-		{
+		runInteractive();
+		/*while (1)*/
+		/*{*/
 			/* shell start interactive mode */
-			p_return = _prompt();
+			/*p_return = _prompt();
 			if (p_return == NULL)
-				break;
+				break;*/
 			/*return (0);*/
-			cmdLineArr = parseLine(p_return, " ");
+			/*cmdLineArr = parseLine(p_return, " ");
 			if (cmdLineArr == NULL)
-				continue;
+				continue;*/
 			/* search command */
-			printf("%s\n", cmdLineArr[0]);
-			cmdData = searchCmd(cmdLineArr[0]);
-			if (cmdData == NULL)
-			{
+			/*printf("%s\n", cmdLineArr[0]);*/
+			/*cmdData = searchCmd(cmdLineArr[0]);*/
+			/*if (cmdData == NULL)
+			{*/
 				/* if search return NULL */
 				/* print error */
-				perror("Error: Not found");
+				/*perror("Error: Not found");
 				free(cmdData);
 				freeArrayOfPtr(cmdLineArr);
 				continue;
-			}
+			}*/
 			/* continue; */
 			/*processExecute(cmdLineArr);*/
-			executeFunc(cmdData, cmdLineArr);
-		}
+			/*executeFunc(cmdData, cmdLineArr);*/
 		putchar('\n');
 	}
 
