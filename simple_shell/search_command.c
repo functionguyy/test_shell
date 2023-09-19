@@ -191,6 +191,37 @@ char *searchPath(char *commandName)
 	return (cmdDirPath);
 }
 /**
+ *
+ *
+ *
+ *
+ */
+char *createDirPath(list_t *h, char **mem, char *cmdName, size_t size)
+{
+	size_t tempBufSize, lenCmdName;
+	char *cmdDirPath, *pathnameMem, *slash;
+	list_t *temp;
+
+	lenCmdName = strlen(cmdName);
+	pathnameMem = *mem;
+	temp = h;
+	slash = "/";
+
+	tempBufSize = temp->len + lenCmdName + 2;
+	if (tempBufSize > size)
+	{
+		size = tempBufSize;
+		pathnameMem = realloc(pathnameMem, sizeof(char) * size);
+	}
+
+	cmdDirPath = strcpy(pathnameMem, temp->str);
+	if (cmdDirPath[(temp->len) - 1] != '/')
+		cmdDirPath = strcat(pathnameMem, slash);
+	cmdDirPath = strcat(pathnameMem, cmdName);
+
+	return (cmdDirPath);
+}
+/**
  * locateCmdDirPath - return the directory pathname containing the binary file
  * of a command.
  * @h: linked list of the PATH directories
@@ -203,24 +234,21 @@ char *locateCmdDirPath(list_t *h, char *cmdName)
 {
 	/* declare variables */
 	list_t *temp;
-	size_t tempBufSize, bufSize, foundSig, lenCmdName;
+	size_t bufSize, foundSig;
 	char *cmdDirPath, *pathnameMem;
 	struct stat st;
-	char *slash;
 
 	/* initialize variables */
-	lenCmdName = strlen(cmdName);
 	bufSize = 512;
 	cmdDirPath = NULL;
 	foundSig = 0;
-	slash = "/";
 	temp = h;
 
 	pathnameMem = malloc(sizeof(char) * bufSize);
 
 	while (temp != NULL && foundSig == 0)
 	{
-		tempBufSize = temp->len + lenCmdName + 2;
+		/*tempBufSize = temp->len + lenCmdName + 2;
 		if (tempBufSize > bufSize)
 		{
 			bufSize = tempBufSize;
@@ -230,7 +258,8 @@ char *locateCmdDirPath(list_t *h, char *cmdName)
 		cmdDirPath = strcpy(pathnameMem, temp->str);
 		if (cmdDirPath[(temp->len) - 1] != '/')
 			cmdDirPath = strcat(pathnameMem, slash);
-		cmdDirPath = strcat(pathnameMem, cmdName);
+		cmdDirPath = strcat(pathnameMem, cmdName);*/
+		cmdDirPath = createDirPath(temp, &pathnameMem, cmdName, bufSize);
 		printf("%s\n", cmdDirPath);
 
 		/**
@@ -244,8 +273,6 @@ char *locateCmdDirPath(list_t *h, char *cmdName)
 			pathnameMem = strcpy(pathnameMem, cmdDirPath);
 			free(cmdDirPath);
 			cmdDirPath = pathnameMem;
-		    printf("%s\n", cmdDirPath);
-
 			return (cmdDirPath);
 		}
 		temp = temp->next;
@@ -256,6 +283,7 @@ char *locateCmdDirPath(list_t *h, char *cmdName)
 
 	return (NULL);
 }
+
 /**
  *
  *
