@@ -103,7 +103,6 @@ cmd_t *searchCmd(char *commandName)
 		 * n will be 0 to indicate that the command is a builtin command
 		 * char will be pointer to the name of the function
 		 */
-		printf("yes\n");
 		commandData->cmd = commandName;
 		commandData->locationFlag = 0;
 		return (commandData);
@@ -178,6 +177,8 @@ char *searchPath(char *commandName)
 
 	/* search for command file in PATH directories */
 	head = createPathDirList();
+	if (head == NULL)
+		return (NULL);
 	cmdDirPath = locateCmdDirPath(head, commandName);
 	if (cmdDirPath == NULL)
 	{
@@ -212,6 +213,8 @@ char *createDirPath(list_t *h, char **mem, char *cmdName, size_t size)
 	{
 		size = tempBufSize;
 		pathnameMem = realloc(pathnameMem, sizeof(char) * size);
+		if (pathnameMem == NULL)
+			return (NULL);
 	}
 
 	cmdDirPath = strcpy(pathnameMem, temp->str);
@@ -245,22 +248,14 @@ char *locateCmdDirPath(list_t *h, char *cmdName)
 	temp = h;
 
 	pathnameMem = malloc(sizeof(char) * bufSize);
+	if (pathnameMem == NULL)
+		return (NULL);
 
 	while (temp != NULL && foundSig == 0)
 	{
-		/*tempBufSize = temp->len + lenCmdName + 2;
-		if (tempBufSize > bufSize)
-		{
-			bufSize = tempBufSize;
-			pathnameMem = realloc(pathnameMem, sizeof(char) * bufSize);
-		}
-
-		cmdDirPath = strcpy(pathnameMem, temp->str);
-		if (cmdDirPath[(temp->len) - 1] != '/')
-			cmdDirPath = strcat(pathnameMem, slash);
-		cmdDirPath = strcat(pathnameMem, cmdName);*/
 		cmdDirPath = createDirPath(temp, &pathnameMem, cmdName, bufSize);
-		printf("%s\n", cmdDirPath);
+		if (cmdDirPath == NULL)
+			return (NULL);
 
 		/**
 		 * check if command file exist in PATH directory pointed to by dirPath
@@ -269,7 +264,10 @@ char *locateCmdDirPath(list_t *h, char *cmdName)
 		{
 			foundSig = 1;
 			bufSize = strlen(cmdDirPath);
-			pathnameMem = malloc_checked(sizeof(char) * (bufSize + 1));
+			pathnameMem = malloc(sizeof(char) * (bufSize + 1));
+			if (pathnameMem == NULL)
+				return (NULL);
+
 			pathnameMem = strcpy(pathnameMem, cmdDirPath);
 			free(cmdDirPath);
 			cmdDirPath = pathnameMem;
@@ -300,6 +298,8 @@ list_t *createPathDirList(void)
 	/* initialize variables */
 	head = NULL;
 	envValue = strdup(_getenv("PATH"));
+	if (envValue == NULL)
+		return (NULL);
 	pathDirToken = strtok(envValue, ":");
 
 
