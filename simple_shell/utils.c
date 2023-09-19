@@ -56,26 +56,25 @@ ssize_t isEmptyString(char *str, char *delimiter)
  */
 char *_getenv(char *envVar)
 {
-	char **ep, *varName, *value, *line;
-	size_t valueIdx;
+	char **ep, *value, *line;
+	size_t n;
 
 	if (envVar == NULL)
 		return (NULL);
 
 	ep = environ;
 	value = NULL;
+	n = strlen(envVar);
 
 
 
 	while (*ep != NULL)
 	{
-		varName = strtok(*ep, "=");
-		if (varName != NULL && strcmp(varName, envVar) == 0)
+		if (strncmp(*ep, envVar, n) == 0)
 		{
 			/* enviroment variables are of the nature name=var */
-			valueIdx = strlen(varName) + 1;
 			line = *ep;
-			value = (line + valueIdx);
+			value = (line + (n + 1));
 			break;
 		}
 		ep++;
